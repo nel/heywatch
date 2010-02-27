@@ -56,7 +56,7 @@ module HeyWatch
   
   # Convert the XML response into Hash
   def self.response(xml)
-    XmlSimple.xml_in(xml, {'ForceArray' => false})
+    XmlSimple.xml_in(xml, {'ForceArray' => false, 'keeproot' => false})
   end
   
   # sanitize url
