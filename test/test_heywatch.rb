@@ -157,4 +157,26 @@ class TestHeywatch < Test::Unit::TestCase
       assert_equal 3, retrial
     end
   end
+  
+  # Hash and Array extension
+  def test_attribute_hash_should_compare_to_hash
+    assert_equal({:foo => {'bar' => 1}}, 
+                  AttributeHash.new({:foo => AttributeHash.new({'bar' => 1})}))
+                 
+  end
+  
+  def test_attribute_hash_should_serialize_as_hash
+    assert_equal({:foo => {'bar' => 1}}.to_yaml, 
+                  AttributeHash.new({:foo => AttributeHash.new({'bar' => 1})}).to_yaml)
+  end
+  
+  def test_response_collection_should_compare_to_array
+    assert_equal [:nice,:nice],
+                 ResponseCollection.new(2, :nice)
+  end
+  
+  def test_response_collection_should_serialize_as_hash
+    assert_equal [:nice,:nice].to_yaml,
+                 ResponseCollection.new(2, :nice).to_yaml
+  end
 end

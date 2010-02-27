@@ -20,6 +20,21 @@ module HeyWatch
       end
     end
     
+    # Returns an exact copy
+    def dup
+      AttributeHash.new(self)
+    end
+    
+    # Avoid keeping concrete type in stuff like serialization
+    def to_yaml(*args)
+      to_hash.to_yaml(*args)
+    end
+        
+    # Convert to a Hash
+    def to_hash
+      Hash.new(default).merge(self)
+    end
+    
     # Replace "-" by "_" in all keys of the hash
     def underscore_keys!
       self.keys.each do |k|
@@ -124,6 +139,14 @@ module HeyWatch
     def include_heywatch_object(inc=nil)
       return self if inc.nil?
       self.each {|object| object.include_heywatch_object(inc)}
+    end
+    
+    def to_array
+      [] + self
+    end
+    
+    def to_yaml(*args)
+      to_array.to_yaml(*args)
     end
   end
 end
