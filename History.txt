@@ -1,0 +1,8 @@
+*0.0.2 (pending)*
+
+* Heywatch can now be installed as a Rails Plugin instead of a Gem [al]
+* Implement retry on API call [nel]
+
+*0.0.1 (August 8, 2007)*
+
+* First Official Release [Bruno Celeste]
