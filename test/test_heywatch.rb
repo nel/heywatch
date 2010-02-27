@@ -1,11 +1,10 @@
 require File.dirname(__FILE__) + '/test_helper.rb'
-require File.dirname(__FILE__) + '/../lib/heywatch'
 include HeyWatch
 
 
 class TestHeywatch < Test::Unit::TestCase
   def setup
-    Base::establish_connection! :login => '', :password => ''
+    Base::establish_connection! :login => get_credentials(:login), :password => get_credentials(:password)
   end
   
   # Authentification
@@ -145,5 +144,17 @@ class TestHeywatch < Test::Unit::TestCase
   def test_should_raise_if_video_doesnt_exist
     assert_raise(ResourceNotFound) { Video.destroy(99999999999) }
     assert_raise(ResourceNotFound) { Video.update(99999999999, :title => 'mytitle') }
+  end
+  
+  # Browser
+  
+  def test_should_retry_connection_attempt_on_network_errors
+    [Errno::EPIPE, Timeout::Error, Errno::EPIPE, Errno::EINVAL, EOFError].each do |network_exception|
+      retrial = 0
+      assert_raise(network_exception) {
+        Browser.with_http {|http| retrial += 1; raise network_exception}
+      }
+      assert_equal 3, retrial
+    end
   end
 end

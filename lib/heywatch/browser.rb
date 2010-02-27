@@ -9,6 +9,17 @@ module HeyWatch
   #   Browser::delete '/encoded_video/54000', session
   class Browser
     class << self
+      def with_http(&block)
+        attempts ||= 1
+        cnx = Net::HTTP.new(Host)
+        cnx.open_timeout = 10
+        cnx.read_timeout = 10
+        cnx.start &block
+      rescue Errno::EPIPE, Timeout::Error, Errno::EPIPE, Errno::EINVAL, EOFError
+        attempts += 1
+        attempts <= 3 ? retry : raise
+      end
+      
       # Raise when code response != 2xx
       def raise_if_response_error(res)
         code = res.response.code.to_i
@@ -40,14 +51,14 @@ module HeyWatch
       # GET on path
       def get(path, session=nil)
         path += ".#{OutFormat}" unless path.include? "."
-        res = Net::HTTP.start(Host) {|http| http.get(path, header(session))}
+        res = with_http {|http| http.get(path, header(session))}
         raise_if_response_error(res)
         res
       end
 
       # POST on path and pass the query(Hash)
       def post(path, query={}, session=nil)
-        res = Net::HTTP.start(Host) {|http| http.post(path, query.merge(:format => OutFormat).to_a.map{|x| x.join("=")}.join("&"), self.header(session))}
+        res = with_http {|http| http.post(path, query.merge(:format => OutFormat).to_a.map{|x| x.join("=")}.join("&"), self.header(session))}
         raise_if_response_error(res)
         res
       end
@@ -56,14 +67,14 @@ module HeyWatch
       def put(path, query={}, session=nil)
         req = Net::HTTP::Put.new(path, header(session))
         req.form_data = query.merge(:format => OutFormat)
-        res = Net::HTTP.new(Host).start {|http| http.request(req) }
+        res = with_http {|http| http.request(req) }
         raise_if_response_error(res)
         true
       end
       
       # DELETE on path
       def delete(path, session=nil)
-        res = Net::HTTP.start(Host) {|http| http.delete(path+"."+OutFormat, header(session))}
+        res = with_http {|http| http.delete(path+"."+OutFormat, header(session))}
         raise_if_response_error(res)
         true
       end
@@ -75,7 +86,7 @@ module HeyWatch
 
         boundary = '349832898984244898448024464570528145'
         query = params.collect {|p| '--' + boundary + "\r\n" + p}.join('') + "--" + boundary + "--\r\n"
-        res = Net::HTTP.start(Host) {|http| http.post(path, query, header(session).merge("Content-Type" => "multipart/form-data; boundary=" + boundary))}
+        res = with_http {|http| http.post(path, query, header(session).merge("Content-Type" => "multipart/form-data; boundary=" + boundary))}
         raise_if_response_error(res)
         res
       end
