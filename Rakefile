@@ -1,12 +1,9 @@
 require 'rubygems'
 require 'rake'
 require 'rake/clean'
-require 'rake/testtask'
 require 'rake/packagetask'
 require 'rake/gempackagetask'
-require 'rake/rdoctask'
 require 'rake/contrib/rubyforgepublisher'
-require 'fileutils'
 require 'hoe'
 include FileUtils
 require File.join(File.dirname(__FILE__), 'lib', 'heywatch', 'version')
@@ -51,7 +48,6 @@ hoe = Hoe.new(GEM_NAME, VERS) do |p|
   p.extra_deps = [ ['xml-simple', '>= 1.0.0'] ]     # An array of rubygem dependencies [name, version], e.g. [ ['active_support', '>= 1.3.1'] ]
   p.spec_extras = {:extra_rdoc_files => ["README.txt"], :rdoc_options => RDOC_OPTS}    # A hash of extra values to set in the gemspec.
 end
-
 
 desc 'Generate website files'
 task :website_generate do

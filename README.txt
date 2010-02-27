@@ -1,4 +1,4 @@
-=Hey!Watch - Video Encoding Web Service
+= Hey!Watch - Video Encoding Web Service
 
 Hey!Watch <http://heywatch.com> provides a simple and robust encoding plateform.
 The service allows developers to access a fast, scalable and inexpensive web 
@@ -8,9 +8,9 @@ in any web or desktop applications.
 The documentation of the API can be found at http://wiki.heywatch.com/API_Documentation
 
 
-==Getting started
+== Getting started
 
-===Transfer a video, encode it in ipod format and download the encoded video
+=== Transfer a video, encode it in ipod format and download the encoded video
 
  require 'heywatch'
  include HeyWatch
@@ -31,7 +31,7 @@ The documentation of the API can be found at http://wiki.heywatch.com/API_Docume
  puts "video saved in {path}"
 
  
-===Upload a video from the disk, encode it with FTP auto transfer option
+=== Upload a video from the disk, encode it with FTP auto transfer option
 
  raw_video = Video.create(:file => 'videos/myvideo.avi', :title => 'Funny video') do |percent, total_size, received|
    puts "#{percent}%"
@@ -40,20 +40,20 @@ The documentation of the API can be found at http://wiki.heywatch.com/API_Docume
  Job.create :video_id => raw_video.id, :default_format => true, :ftp_directive => 'ftp://login:pass@host.com/heywatch_vids/'
 
 
-===Generate a thumbnail
+=== Generate a thumbnail
 
   v = EncodedVideo.find(5400)
   v.thumbnail :start => 15, :width => 640, :height => 480    
 
 
-===Update your account
+=== Update your account
 
   account = Account.find
   account.update_attributes :ping_url_after_encode => 'http://yourhost.com/ping/encode'
 
 
 
-==Integration in a rails application
+== Integration in a rails application
 
 This short HOWTO uses the ping options. So in your HeyWatch account, you must
 configure all the ping URL (except transfer for this example).
@@ -64,7 +64,7 @@ Examples:
  ping_url_if_error => http://myhost.com/ping/error
 
 
-===Config
+=== Config
 
 In your config/environment.rb:
 
@@ -72,7 +72,7 @@ In your config/environment.rb:
   HeyWatch::Base::establish_connection! :login => 'login', :password => 'passwd'
 
 
-===Item Model
+=== Item Model
 
  create_table "items", :force => true do |t|
    t.column "title",       :string,                          :null => false
@@ -118,7 +118,7 @@ In app/models/item.rb:
  end
 
 
-===Ping Controller
+=== Ping Controller
 
 In app/controllers/ping_controller.rb:
 
