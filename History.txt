@@ -1,5 +1,12 @@
 *0.0.2 (pending)*
 
+* Get rid of all heywatch specific Ruby type extension, Hash#method_missing in particular.
+  Heywatch don't mess with other lib and with ruby anymore. It now use it's own extended version of Hash and Array. 
+  This is fully backward compatible from an api side.
+  The only side-effects could be:
+   - Test on concrete type on object instead of duck typing (yuk!)
+   - You rely on Heywatch Ruby type extension in other part of your code (doh ??)
+   But you don't do that hmm, do you ? :)
 * Heywatch can now be installed as a Rails Plugin instead of a Gem [al]
 * Implement retry on API call [nel]
 

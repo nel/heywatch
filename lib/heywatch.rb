@@ -56,7 +56,7 @@ module HeyWatch
   
   # Convert the XML response into Hash
   def self.response(xml)
-    XmlSimple.xml_in(xml, {'ForceArray' => false, 'keeproot' => false})
+    AttributeHash.new(XmlSimple.xml_in(xml, {'ForceArray' => false, 'keeproot' => false}))
   end
   
   # sanitize url
@@ -78,11 +78,3 @@ require "heywatch/account"
 require "heywatch/download"
 require "heywatch/discover"
 require "heywatch/job"
-
-class Hash
-  include HeyWatch::CoreExtension::HashExtension
-end
-
-class Array
-  include HeyWatch::CoreExtension::ArrayExtension
-end

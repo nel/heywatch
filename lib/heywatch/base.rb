@@ -105,7 +105,7 @@ module HeyWatch
       private
       
       def find_every(options) #:nodoc:
-        collection = []
+        collection = ResponseCollection.new
         res = HeyWatch::response(Browser::get(path, session).body)
         return collection if res.empty?
         
@@ -161,7 +161,8 @@ module HeyWatch
     #
     #   Format.new :name => "test format", :sample_rate => 24000
     def initialize(attributes={})
-      @attributes = attributes.underscore_keys!
+      @attributes = AttributeHash.new(attributes)
+      @attributes.underscore_keys!
       @attributes.type_cast!
     end
 
